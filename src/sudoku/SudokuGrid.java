@@ -7,6 +7,8 @@ public class SudokuGrid {
 	public int[][] grid;	// actual integer values on grid
 	public int gridSize;	// grid is n^2 x n^2
 	public int blockSize;	// blocks are n x n
+	
+	public int[][] blockRepresentation;
 
 	public int netConflict = 0; // sum of all conflicts
 	
@@ -22,13 +24,29 @@ public class SudokuGrid {
 	public ArrayList<ArrayList<EmptyPosition>> tentativeColVals = new ArrayList<ArrayList<EmptyPosition>>();
 	public ArrayList<ArrayList<EmptyPosition>> tentativeBlockVals = new ArrayList<ArrayList<EmptyPosition>>();
 	
-	public SudokuGrid() {
+	public SudokuGrid(int n, int[][] _grid) {
 		
+		this.blockSize = n;
+		this.gridSize = n * n;
 		
+		this.blockRepresentation = new int[n][n];
+		int i = 0;
+		for (int r = 0; r < n; r++) {
+			for (int c = 0; c < n; c++) {
+				this.blockRepresentation[r][c] = i;
+				i++;
+			}
+		}
 		
+		if (_grid != null) {
+			this.grid = _grid;
+		} else {
+			// otherwise construct empty grid of proper size
+			this.grid = new int[this.gridSize][this.gridSize];
+		}
 		
 		// initialize all arraylists
-		for (int i = 0; i < this.gridSize; i++) {
+		for (i = 0; i < this.gridSize; i++) {
 			this.clueRowVals.add(new ArrayList<Integer>());
 			this.clueColVals.add(new ArrayList<Integer>());
 			this.clueBlockVals.add(new ArrayList<Integer>());
@@ -41,7 +59,7 @@ public class SudokuGrid {
 	
 	// returns the block ID this position fits into 
 	public int getBlockIDFromPosition(int row, int col) {
-		
+		return this.blockRepresentation[row / this.blockSize][col / this.blockSize];
 	}
 	
 	// get the empty position with the most conflicts (linear search)
