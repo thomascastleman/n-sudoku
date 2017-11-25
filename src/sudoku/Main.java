@@ -8,6 +8,7 @@ public class Main {
 		
 	}
 	
+	// convert a list of integers into an int[] primitive array
 	public static int[] convertToIntPrimitive(List<Integer> list) {
 		int[] array = new int[list.size()];
 		for (int i = 0; i < array.length; i++) {

@@ -36,8 +36,7 @@ public class SudokuGrid {
 			this.tentativeRowVals.add(new ArrayList<EmptyPosition>());
 			this.tentativeColVals.add(new ArrayList<EmptyPosition>());
 			this.tentativeBlockVals.add(new ArrayList<EmptyPosition>());
-		}
-		
+		}	
 	}
 	
 	// returns the block ID this position fits into 
@@ -120,6 +119,7 @@ public class SudokuGrid {
 			}
 		}
 		
+		this.netConflict = 0;
 		// calculate all conflicts, sum to net conflict
 		for (EmptyPosition p : allEmptyPositions) {
 			p.numConflicts = p.calcConflictWithValue(p.value);

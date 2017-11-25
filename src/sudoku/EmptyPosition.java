@@ -31,7 +31,8 @@ public class EmptyPosition {
 				parentGrid.tentativeBlockVals.get(this.blockID))) {
 			
 			for (EmptyPosition p : set) {
-				if (p.value == value) {
+				// if same value but not this position
+				if (p.value == value && (p.row != this.row || p.col != this.col)) {
 					conflict++;
 				}
 			}
@@ -42,6 +43,7 @@ public class EmptyPosition {
 	
 	// find another possible value of this empty position with less conflicts
 	public void updateToLowestConflictValue() {
+		int initConf = this.numConflicts;	// store initial conflict
 		for (int val : this.possibleValues) {
 			int conf = this.calcConflictWithValue(val);
 			if (conf < this.numConflicts) {
@@ -49,12 +51,19 @@ public class EmptyPosition {
 				this.numConflicts = conf;
 			}
 		}
+		
+		// update net conflict
+		this.parentGrid.netConflict -= (initConf - this.numConflicts);
 	}
 	
 	// update value and conflicts to random selection from possible
 	public void updateToRandomPossibleValue() {
+		int initConf = this.numConflicts;
 		this.value = this.possibleValues[(int) (Math.random() * this.possibleValues.length)];
 		this.numConflicts = this.calcConflictWithValue(this.value);
+		
+		// update net conflict
+		this.parentGrid.netConflict -= (initConf - this.numConflicts);
 	}
 	
 	// update the conflict values of all other EmptyPositions affected by this position's change in value
@@ -71,6 +80,7 @@ public class EmptyPosition {
 					// if position had a conflict with previous value
 					if (p.value == previousValue) {
 						p.numConflicts--;		// remove that conflict
+						this.parentGrid.netConflict--;
 					}
 				}
 			}
