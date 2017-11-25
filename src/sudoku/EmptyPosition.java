@@ -43,16 +43,34 @@ public class EmptyPosition {
 	
 	// find another possible value of this empty position with less conflicts
 	public void updateToLowestConflictValue() {
+		
 		int initConf = this.numConflicts;	// store initial conflict
+		
+		System.out.println("\nValue " + this.value + " has initial conf " + initConf);
+		
+		System.out.println("Num possible values: " + this.possibleValues.length);
 		for (int val : this.possibleValues) {
 			int conf = this.calcConflictWithValue(val);
+			System.out.println("Testing against " + conf);
+			
 			if (conf < this.numConflicts) {
+				
+				System.out.println("CHANGING VALUE FROM " + this.value + " TO " + val);
+				
+				
 				this.value = val;
 				this.numConflicts = conf;
 			}
 		}
 		
-		// update net conflict
+		
+		
+		
+		// debug
+		System.out.println("Subtracting " + (initConf - this.numConflicts) + " from netconflict");
+		
+		
+		// update net conflicts
 		this.parentGrid.netConflict -= (initConf - this.numConflicts);
 	}
 	
@@ -63,7 +81,8 @@ public class EmptyPosition {
 		this.numConflicts = this.calcConflictWithValue(this.value);
 		
 		// update net conflict
-		this.parentGrid.netConflict -= (initConf - this.numConflicts);
+		this.parentGrid.netConflict -= initConf;
+		this.parentGrid.netConflict += this.numConflicts;
 	}
 	
 	// update the conflict values of all other EmptyPositions affected by this position's change in value

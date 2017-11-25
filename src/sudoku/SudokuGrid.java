@@ -12,7 +12,7 @@ public class SudokuGrid {
 
 	public int netConflict = 0; // sum of all conflicts
 	
-	public ArrayList<EmptyPosition> allEmptyPositions;	// manage empty positions
+	public ArrayList<EmptyPosition> allEmptyPositions = new ArrayList<EmptyPosition>();	// manage empty positions
 	
 	// structures for keeping track of clue (given) values per row, col, block
 	public ArrayList<ArrayList<Integer>> clueRowVals = new ArrayList<ArrayList<Integer>>();
@@ -39,7 +39,11 @@ public class SudokuGrid {
 		}
 		
 		if (_grid != null) {
-			this.grid = _grid;
+			if (this.gridSize == _grid.length) {
+				this.grid = _grid;
+			} else {
+				System.out.println("INCOMPATIBLE N AND GRID SIZE (SudokuGrid constructor)");
+			}
 		} else {
 			// otherwise construct empty grid of proper size
 			this.grid = new int[this.gridSize][this.gridSize];
@@ -76,7 +80,7 @@ public class SudokuGrid {
 	}
 	
 	// serialize all given clues into row, col, and block collections
-	public void recordClues() {
+	public void initClues() {
 		// for each row
 		for (int r = 0; r < this.grid.length; r++) {
 			// for each column
@@ -151,19 +155,26 @@ public class SudokuGrid {
 	// solve grid and return filled int[][] array
 	public int[][] solve() {
 		
-		this.recordClues();				// locate and keep track of given values
+		this.initClues();				// locate and keep track of given values
 		this.initEmptyPositions();		// initialize all empty positions
 		
 		double temperature = 100.0;
 		double rate = 0.99;
 		
-		// NOW DO SIMULATED ANNEALING
+		
+		// debug
+		int debug = 0;
 		
 		while (netConflict > 0) {
+			
+			System.out.println("Temp: " + temperature + ", net conflict: " + this.netConflict);
 			
 			
 			EmptyPosition maxConflict = this.getMaxConflictPosition();
 			int previousValue = maxConflict.value;
+			
+			
+			System.out.println("MAX CONFLICT VALUE AT (" + maxConflict.row + ", " + maxConflict.col + ")");
 			
 			if (Math.random() * 100 < temperature) {
 				maxConflict.updateToRandomPossibleValue();
@@ -175,9 +186,27 @@ public class SudokuGrid {
 			
 			temperature *= rate;
 			
+			if (temperature < 0.01) {
+				temperature = 100.0;
+				System.out.println("TEMP RESET");
+			}
+			
+			// debug
+			if (debug > 30) {
+				System.out.println("FAILURE");
+				break;
+			}
+			
+			debug++;
+			
 		}
 		
+		
+		System.out.println("SOLUTION FOUND: NET CONFLICT = " + this.netConflict);
+		
 		// NOW FORMAT BACK INTO INT[][] AND RETURN
+		
+		return new int[0][0];
 	}	
 }
 
