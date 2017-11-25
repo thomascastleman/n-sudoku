@@ -8,13 +8,17 @@ public class EmptyPosition {
 	public int row;					// row of position
 	public int col;					// column of position
 	public int blockID;				// ID of the block to which this position belongs
-	public int numConflicts;		// current number of conflicts posed by this position's value
 	public int[] possibleValues;	// all possible values this position may hold, which do not violate the clue grid values
+	public int numConflicts;		// current number of conflicts posed by this position's value
 	
 	public SudokuGrid parentGrid;	// reference to grid that contains this position
 	
-	public EmptyPosition() {
-		
+	public EmptyPosition(int _row, int _col, int _blockID, int _value, int[] _possibleValues) {
+		this.row = _row;
+		this.col = _col;
+		this.blockID = _blockID;
+		this.value = _value;
+		this.possibleValues = _possibleValues;
 	}
 	
 	// calculate the number of conflicts given a value of this position
