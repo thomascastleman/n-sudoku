@@ -33,6 +33,7 @@ public class Main {
 		logGrid(solution);
 	}
 	
+	// log a grid to the console
 	public static void logGrid(int[][] grid) {
 		for (int r = 0; r < grid.length; r++) {
 			for (int c = 0; c < grid[r].length; c++) {
