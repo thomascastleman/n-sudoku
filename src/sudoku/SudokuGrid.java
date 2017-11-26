@@ -192,7 +192,7 @@ public class SudokuGrid {
 			}
 			
 			// debug
-			if (debug > 30) {
+			if (debug > 100) {
 				System.out.println("FAILURE");
 				break;
 			}
@@ -204,10 +204,14 @@ public class SudokuGrid {
 		
 		System.out.println("SOLUTION FOUND: NET CONFLICT = " + this.netConflict);
 		
-		// NOW FORMAT BACK INTO INT[][] AND RETURN
+		// update actual grid values to reflect solution
+		for (EmptyPosition p : this.allEmptyPositions) {
+			this.grid[p.row][p.col] = p.value;
+		}
 		
-		return new int[0][0];
-	}	
+		return this.grid;
+	}
+
 }
 
 

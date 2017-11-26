@@ -12,35 +12,22 @@ public class Main {
 				{0, 3, 0, 0}
 		};
 		
+		logGrid(grid);
+		System.out.println("");
+		
 		SudokuGrid s = new SudokuGrid(2, grid);
 		
-		s.initClues();
-		
-		s.initEmptyPositions();
-		
-		System.out.println("INITIAL NET CONFLICT: " + s.netConflict);
-		
-		s.solve();
-		
-//		System.out.println("NET CONFLICT: " + s.netConflict);
-//		
-//		ArrayList<ArrayList<EmptyPosition>> set = s.tentativeRowVals;
-//		
-//		for (int i = 0; i < set.size(); i++) {
-//			System.out.println("ROW " + i + ": ");
-//			for (int j = 0; j < set.get(i).size(); j++) {
-//				EmptyPosition p = set.get(i).get(j);
-//				System.out.print(p + ", ");
-//				
-//				System.out.println("value: " + p.value + ", conflict: " + p.numConflicts);
-//
-//				
-//				
-//			}
-//			System.out.println("");
-//		}
-		
-		
+		int[][] solution = s.solve();
+		logGrid(solution);
+	}
+	
+	public static void logGrid(int[][] grid) {
+		for (int r = 0; r < grid.length; r++) {
+			for (int c = 0; c < grid[r].length; c++) {
+				System.out.print(grid[r][c] + " ");
+			}
+			System.out.println("");
+		}
 	}
 	
 	// convert a list of integers into an int[] primitive array
