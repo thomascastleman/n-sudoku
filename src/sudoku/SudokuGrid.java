@@ -163,29 +163,11 @@ public class SudokuGrid {
 		
 		
 		// debug
-		int debug = 0;
+		int iterations = 0;
 		
 		while (netConflict > 0) {
 			
-			System.out.println("\nIteration " + debug + " Temp: " + temperature + ", net conflict: " + this.netConflict);
-			
-			
-//			EmptyPosition maxConflict = this.getMaxConflictPosition();
-//			int previousValue = maxConflict.value;
-//			
-//			
-//			System.out.println("MAX CONFLICT VALUE AT (" + maxConflict.row + ", " + maxConflict.col + ")");
-//			
-//			if (Math.random() * 100 < temperature) {
-//				maxConflict.updateToRandomPossibleValue();
-//			} else {
-//				maxConflict.updateToLowestConflictValue();
-//			}
-//			
-//			System.out.println("After single update, net is " + this.netConflict);
-//			
-//			maxConflict.updateAffectedConflicts(previousValue);
-			
+			System.out.println("\nIteration " + iterations + " Temp: " + temperature + ", net conflict: " + this.netConflict);
 			
 			EmptyPosition positionOfChange;
 			
@@ -210,10 +192,7 @@ public class SudokuGrid {
 			
 			
 			
-			
-			
-			
-			
+		
 			temperature *= rate;
 			
 			if (temperature < 0.01) {
@@ -221,13 +200,7 @@ public class SudokuGrid {
 				System.out.println("TEMP RESET");
 			}
 			
-//			// debug
-//			if (debug > 1000) {
-//				System.out.println("\n\nFAILURE");
-//				break;
-//			}
-			
-			debug++;
+			iterations++;
 			
 		}
 		

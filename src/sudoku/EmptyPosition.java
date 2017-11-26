@@ -47,6 +47,7 @@ public class EmptyPosition {
 		int initConf = this.numConflicts;	// store initial conflict
 		
 		System.out.println("\nValue " + this.value + " has initial conf " + initConf);
+		System.out.println("Calculated conflict is " + this.calcConflictWithValue(this.value));
 		
 		System.out.println("Num possible values: " + this.possibleValues.length);
 		for (int val : this.possibleValues) {
