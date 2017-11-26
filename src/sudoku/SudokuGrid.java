@@ -153,7 +153,7 @@ public class SudokuGrid {
 	}
 	
 	// solve grid and return filled int[][] array
-	public int[][] solve() {
+	public int[][] solve(boolean logging) {
 		
 		this.initClues();				// locate and keep track of given values
 		this.initEmptyPositions();		// initialize all empty positions
@@ -161,47 +161,44 @@ public class SudokuGrid {
 		double temperature = 100.0;
 		double rate = 0.99;
 		
-		
-		// debug
 		int iterations = 0;
+		
+		System.out.println("Starting min-conflicts with net conflict of " + this.netConflict);
 		
 		while (netConflict > 0) {
 			
-			System.out.println("\nIteration " + iterations + " Temp: " + temperature + ", net conflict: " + this.netConflict);
+			if (logging) {
+				// log info to console
+				System.out.println("\nIteration " + iterations);
+				System.out.println("Temperature: " + temperature);
+				System.out.println("Net Conflict: " + this.netConflict);
+			}
 			
 			EmptyPosition positionOfChange;
 			
+			// probabilistically, randomize position and value
 			if (Math.random() * 100 < temperature) {
-				System.out.println("TOTAL RANDOMIZATION");
-				
 				positionOfChange = this.allEmptyPositions.get((int) (Math.random() * this.allEmptyPositions.size()));
-				int previousValue = positionOfChange.value;
-				
 				positionOfChange.updateToRandomPossibleValue();
-				positionOfChange.updateAffectedConflicts(previousValue);
 			} else {
+				// otherwise, change max conflict position to possible value with least conflicts
 				positionOfChange = this.getMaxConflictPosition();
-				
-				int previousValue = positionOfChange.value;
-				
 				positionOfChange.updateToLowestConflictValue();
-				positionOfChange.updateAffectedConflicts(previousValue);
 			}
 			
-			System.out.println("CHOOSING (" + positionOfChange.row + ", " + positionOfChange.col + ")");
+			// update all conflict values in same row, col, block to reflect this change
+			int previousValue = positionOfChange.value;
+			positionOfChange.updateAffectedConflicts(previousValue);
 			
+			temperature *= rate;	// decrease temperature
 			
-			
-		
-			temperature *= rate;
-			
+			// if local optimum was not escaped, reset temperature
 			if (temperature < 0.01) {
 				temperature = 100.0;
-				System.out.println("TEMP RESET");
+				System.out.println("\nTEMP RESET");
 			}
 			
 			iterations++;
-			
 		}
 		
 		if (this.netConflict == 0) {
