@@ -167,24 +167,52 @@ public class SudokuGrid {
 		
 		while (netConflict > 0) {
 			
-			System.out.println("Iteration " + debug + " Temp: " + temperature + ", net conflict: " + this.netConflict);
+			System.out.println("\nIteration " + debug + " Temp: " + temperature + ", net conflict: " + this.netConflict);
 			
 			
-			EmptyPosition maxConflict = this.getMaxConflictPosition();
-			int previousValue = maxConflict.value;
+//			EmptyPosition maxConflict = this.getMaxConflictPosition();
+//			int previousValue = maxConflict.value;
+//			
+//			
+//			System.out.println("MAX CONFLICT VALUE AT (" + maxConflict.row + ", " + maxConflict.col + ")");
+//			
+//			if (Math.random() * 100 < temperature) {
+//				maxConflict.updateToRandomPossibleValue();
+//			} else {
+//				maxConflict.updateToLowestConflictValue();
+//			}
+//			
+//			System.out.println("After single update, net is " + this.netConflict);
+//			
+//			maxConflict.updateAffectedConflicts(previousValue);
 			
 			
-			System.out.println("MAX CONFLICT VALUE AT (" + maxConflict.row + ", " + maxConflict.col + ")");
+			EmptyPosition positionOfChange;
 			
 			if (Math.random() * 100 < temperature) {
-				maxConflict.updateToRandomPossibleValue();
+				System.out.println("TOTAL RANDOMIZATION");
+				
+				positionOfChange = this.allEmptyPositions.get((int) (Math.random() * this.allEmptyPositions.size()));
+				int previousValue = positionOfChange.value;
+				
+				positionOfChange.updateToRandomPossibleValue();
+				positionOfChange.updateAffectedConflicts(previousValue);
 			} else {
-				maxConflict.updateToLowestConflictValue();
+				positionOfChange = this.getMaxConflictPosition();
+				
+				int previousValue = positionOfChange.value;
+				
+				positionOfChange.updateToLowestConflictValue();
+				positionOfChange.updateAffectedConflicts(previousValue);
 			}
 			
-			System.out.println("After single update, net is " + this.netConflict);
+			System.out.println("CHOOSING (" + positionOfChange.row + ", " + positionOfChange.col + ")");
 			
-			maxConflict.updateAffectedConflicts(previousValue);
+			
+			
+			
+			
+			
 			
 			temperature *= rate;
 			
@@ -203,7 +231,11 @@ public class SudokuGrid {
 			
 		}
 		
-		System.out.println("SOLUTION FOUND: NET CONFLICT = " + this.netConflict);
+		if (this.netConflict == 0) {
+			System.out.println("\n\n\n\nSOLUTION FOUND: NET CONFLICT = " + this.netConflict);
+		} else {
+			System.out.println("\n\n\n\nFailure with net conflict of " + this.netConflict);
+		}
 		
 		// update actual grid values to reflect solution
 		for (EmptyPosition p : this.allEmptyPositions) {
