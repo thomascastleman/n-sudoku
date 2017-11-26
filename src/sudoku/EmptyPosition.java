@@ -47,7 +47,6 @@ public class EmptyPosition {
 		int initConf = this.numConflicts;	// store initial conflict
 		
 		System.out.println("\nValue " + this.value + " has initial conf " + initConf);
-		System.out.println("Calculated conflict is " + this.calcConflictWithValue(this.value));
 		
 		System.out.println("Num possible values: " + this.possibleValues.length);
 		for (int val : this.possibleValues) {
@@ -99,15 +98,18 @@ public class EmptyPosition {
 					parentGrid.tentativeBlockVals.get(this.blockID))) {
 				
 				for (EmptyPosition p : set) {
-					// if position had a conflict with previous value
-					if (p.value == previousValue) {
-						p.numConflicts--;		// remove that conflict
-						this.parentGrid.netConflict--;
-					}
-					// if now a conflict, update
-					else if (p.value == this.value) {
-						p.numConflicts++;
-						this.parentGrid.netConflict++;
+					// if not this position
+					if (p.row != this.row || p.col != this.col) {
+						// if position had a conflict with previous value
+						if (p.value == previousValue) {
+							p.numConflicts--;		// remove that conflict
+							this.parentGrid.netConflict--;
+						}
+						// if now a conflict, update
+						else if (p.value == this.value) {
+							p.numConflicts++;
+							this.parentGrid.netConflict++;
+						}
 					}
 				}
 			}
