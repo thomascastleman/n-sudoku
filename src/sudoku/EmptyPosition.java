@@ -51,7 +51,7 @@ public class EmptyPosition {
 		System.out.println("Num possible values: " + this.possibleValues.length);
 		for (int val : this.possibleValues) {
 			int conf = this.calcConflictWithValue(val);
-			System.out.println("Testing against " + conf);
+			System.out.println("Testing against " + val + " with conf " + conf);
 			
 			if (conf < this.numConflicts) {
 				
@@ -67,7 +67,7 @@ public class EmptyPosition {
 		
 		
 		// debug
-		System.out.println("Subtracting " + (initConf - this.numConflicts) + " from netconflict");
+		System.out.println("Subtracting " + (initConf - this.numConflicts) + " from netconflict which is " + this.parentGrid.netConflict);
 		
 		
 		// update net conflicts
@@ -83,6 +83,8 @@ public class EmptyPosition {
 		// update net conflict
 		this.parentGrid.netConflict -= initConf;
 		this.parentGrid.netConflict += this.numConflicts;
+		
+		System.out.println("RANDOM CHOICE OUT OF " + this.possibleValues.length + " CHOICES: Net conflict now = " + this.parentGrid.netConflict);
 	}
 	
 	// update the conflict values of all other EmptyPositions affected by this position's change in value
@@ -100,6 +102,11 @@ public class EmptyPosition {
 					if (p.value == previousValue) {
 						p.numConflicts--;		// remove that conflict
 						this.parentGrid.netConflict--;
+					}
+					// if now a conflict, update
+					else if (p.value == this.value) {
+						p.numConflicts++;
+						this.parentGrid.netConflict++;
 					}
 				}
 			}
